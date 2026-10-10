@@ -1,0 +1,13 @@
+# Core data handling and plotting
+numpy==2.5.3
+pandas==3.0.6
+matplotlib==3.11.2
+seaborn==0.13.2
+
+# Statistics and modeling
+scipy==1.18.1
+scikit-learn==1.9.1
+statsmodels==0.15.0
+
+# Running the notebook in Jupyter
+ipykernel==7.4.0
