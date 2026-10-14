@@ -12,3 +12,7 @@ tensorflow==2.21.0
 
 # Running the notebook in Jupyter
 ipykernel==7.4.0
+
+# Model explainability
+shap==0.53.0
+lime==0.2.0.1
