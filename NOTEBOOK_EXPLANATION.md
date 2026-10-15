@@ -251,7 +251,7 @@ cov = df.groupby("year").agg(
 
 **What it does:**
 - Groups by `year` and counts: unique races, unique drivers, and the fraction of rows with qualifying data.
-- Reveals that qualifying data only exists from ~2003 onward, motivating the decision to limit the modeling dataset to 2003+.
+- Reveals that qualifying data only exists from ~2003 onward. Older seasons are kept and flagged with `has_quali` instead of being dropped (see 8.2).
 
 ---
 
@@ -506,14 +506,14 @@ These cells contain the detailed logic for computing the standings features with
 ### Cell 44 — Finalise Modeling Table (Code)
 
 ```python
-data = df[df.year >= 2003].reset_index(drop=True)
+data = df.reset_index(drop=True)   # all seasons
 assert not data.duplicated(["raceId", "driverId"]).any()
 print(f"Modeling table: {len(data)} rows (one per driver per race), podium rate {data.podium.mean():.3f}")
 data[FEATURES].isna().mean().round(3).to_frame("missing share").T
 ```
 
 **What it does:**
-- Filters to 2003+ (first year with reliable qualifying times).
+- Keeps all seasons (1950–2024); qualifying features are missing before 2003 and flagged by `has_quali`.
 - Asserts no duplicate (raceId, driverId) pairs in the final table.
 - Prints total row count and overall podium rate (~16.4%, reflecting ~3 podium spots per ~18-car grid).
 - Shows the missing-value rate for each feature — most are very low (<2%); only form features have missingness for round-1 entries or rookies.
@@ -542,7 +542,7 @@ sns.heatmap(train_part[FEATURES].corr(method="spearman"), ...)  # correlation ma
 ```
 
 **What it does:**
-- Computes the univariate **ROC-AUC** for each feature using only training seasons (2003–2017). `max(a, 1-a)` makes the metric symmetric so negatively correlated features (like `grid_feat`) still show their true informativeness.
+- Computes the univariate **ROC-AUC** for each feature using only training seasons (1950–2017). `max(a, 1-a)` makes the metric symmetric so negatively correlated features (like `grid_feat`) still show their true informativeness.
 - Key AUC results: `grid_feat` and `quali_gap_pct` ≈ 0.90; form features ≈ 0.80–0.85; `home_race` ≈ 0.50 (essentially useless alone).
 - **Podium rate per feature bin** plots for all 8 features, showing the shape of each feature–target relationship (monotonic, non-monotonic, etc.).
 - **Spearman correlation heatmap** to identify redundancy. `grid_feat` and `quali_gap_pct` are correlated (~0.7), but both are kept because grid penalties decouple them.
@@ -576,7 +576,7 @@ Explains the time-based split strategy:
 
 | Split | Seasons | Purpose |
 |---|---|---|
-| Train | 2003–2017 | Fit all models |
+| Train | 1950–2017 | Fit all models |
 | Validation | 2018–2021 | Tune hyperparameters & decision threshold |
 | Test | 2022–2024 | Final evaluation (used **once**) |
 
@@ -726,5 +726,5 @@ Summarises both experiments:
 | 4. EDA After Cleaning | Post-cleaning missingness; yearly coverage; distribution plots; podium rate over time |
 | 5. Q1–Q3 | Grid → podium (exponential decay); home race (negligible effect); prior-season standings (strong predictor, must be lagged) |
 | 6. Features | 8 leakage-safe features with univariate AUC evidence, podium rate plots, and correlation heatmap |
-| 7. Split | Time-based: Train 2003–2017 / Val 2018–2021 / Test 2022–2024 |
+| 7. Split | Time-based: Train 1950–2017 / Val 2018–2021 / Test 2022–2024 |
 | 8. Pre-processing | Median imputation + StandardScaler (fit on train only); 2 order experiments confirming correct methodology |
