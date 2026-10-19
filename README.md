@@ -7,7 +7,7 @@ For each driver in each race, predict whether they finish on the podium (top 3) 
 | Path | What it is |
 |---|---|
 | `F1_Podium_Prediction.ipynb` | Run-all notebook: EDA, cleaning, data-engineering questions Q1-Q3, features, split, models, ablation, XAI, inference function |
-| `report/F1_Podium_Report.pdf` | Analytical report (HTML source and figures alongside) |
+| `report/F1_Podium_Report.pdf` | Analytical report |
 | `dataset/archive/` | The 14 raw Kaggle/Ergast CSVs (never modified; cleaning is done on copies) |
 | `DATASET.md` | Guide to the dataset's tables and joins |
 | `docs/` | Project handouts |

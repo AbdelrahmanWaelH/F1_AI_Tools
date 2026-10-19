@@ -17,7 +17,6 @@
 7. [Section 7 — Train / Validation / Test Split](#section-7--train--validation--test-split)
 8. [Section 8 — Pre-processing](#section-8--pre-processing)
 9. [Section 12 — Inference Function](#section-12--inference-function)
-10. [Section 13 — Analytical Report Notes](#section-13--analytical-report-notes)
 
 ---
 
@@ -741,21 +740,6 @@ Uses the same driver-race with `quali_pos` and `quali_gap_pct` set to `NaN`, `dr
 
 ---
 
-## Section 13 — Analytical Report Notes
-
-The report itself is a separate PDF. The notebook cell lists what it must contain, followed by **notes for the report** that summarise the findings from each section:
-1. Problem definition and the post-qualifying / pre-race cutoff.
-2. Answers to Q1–Q3. Q1: front-row conversion rose from 68 % to 76 % after 2014, and the circuit ranking changed. Q2: there is no home advantage after controlling for grid (OR 0.92, CI 0.78–1.08). Q3: mechanical-retirement rates by constructor fell from 9.5 % to 6.0 %.
-3. The six leakage-safe feature groups (past races only, standings from the previous round).
-4. The time-based split and train-only preprocessing, with the order and leakage experiments.
-5. The model comparison, using PR-AUC as the main metric because classes are imbalanced, with thresholds chosen on validation.
-6. The ablation: grid is the most important group (random-forest PR-AUC 0.725 on validation, 0.709 on test).
-7. Explainability: grid dominates permutation importance and SHAP; LIME explains one borderline case. All of these explain the model, not causes in the real race.
-8. The inference function from Section 12.
-9. Limitations: qualifying-coverage drift, era differences, a single split with a small test set, correlated features, and median-imputation bias.
-
----
-
 ## Summary
 
 | Section | Key Deliverable |
@@ -769,4 +753,3 @@ The report itself is a separate PDF. The notebook cell lists what it must contai
 | 7. Split | Time-based: Train 1950–2017 / Val 2018–2021 / Test 2022–2024 |
 | 8. Pre-processing | Median imputation + StandardScaler (fit on train only); 2 order experiments confirming correct methodology |
 | 12. Inference | `predict_podium`: train-fitted imputer + random forest + validation threshold; demos on complete and partially-missing records |
-| 13. Report notes | Section-by-section findings and limitations for the PDF report |
